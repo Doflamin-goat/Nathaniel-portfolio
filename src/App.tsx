@@ -148,8 +148,32 @@ function App() {
 
       <footer className="footer">
         <div className="container footer__inner">
-          <span>© {new Date().getFullYear()} Nathaniel Philip T. Cruz — IT Specialist & Business Automation Developer</span>
-          <span className="footer__meta">Built with React · Vite · TypeScript</span>
+          <div className="footer__brand">
+            <span className="footer__mark" aria-hidden="true">NP</span>
+            <div className="footer__id">
+              <span className="footer__name">Nathaniel Philip T. Cruz</span>
+              <span className="footer__role">IT Specialist · Business Automation Developer</span>
+            </div>
+          </div>
+
+          <nav className="footer__links" aria-label="Footer">
+            <a href="#about">About</a>
+            <a href="#projects">Projects</a>
+            <a href="#it-support">IT Support</a>
+            <a href="#contact">Contact</a>
+          </nav>
+
+          <a href="#top" className="footer__top" aria-label="Back to top">
+            Back to top
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path d="M12 19V5M6 11l6-6 6 6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
+        </div>
+
+        <div className="container footer__meta">
+          <span>© {new Date().getFullYear()} Nathaniel Philip T. Cruz. All rights reserved.</span>
+          <span>Built with React · Vite · TypeScript</span>
         </div>
       </footer>
     </div>
@@ -181,9 +205,9 @@ function Hero() {
           </h1>
 
           <p className="hero__subtitle">
-            Hi, I’m Nathaniel. I create practical tools that reduce manual work,
-            organize company data, automate repetitive processes, and improve
-            reporting for business operations.
+            I design and build internal tools that reduce manual work, organize
+            company data, automate repetitive processes, and improve reporting
+            for business operations.
           </p>
 
           <div className="hero__cta">
@@ -521,8 +545,8 @@ function Gallery() {
     <Section
       id="proofs"
       eyebrow="Selected Proofs"
-      title="Proof gallery without duplicate screenshots"
-      description="Only selected screenshots are shown here. Main project sections already have screenshot slots, so this gallery can be used for your best proof images only."
+      title="Highlight gallery"
+      description="A curated strip of the strongest visuals across dashboards, automations, and internal tools."
       accent="blue"
     >
       <div className="gallery gallery--selected">
