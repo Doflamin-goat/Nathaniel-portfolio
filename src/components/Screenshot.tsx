@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 type Props = {
   src?: string
@@ -10,6 +11,7 @@ export function Screenshot({ src, alt, ratio = 'wide' }: Props) {
   const [errored, setErrored] = useState(false)
   const [open, setOpen] = useState(false)
   const showPlaceholder = !src || errored
+  const canOpen = !showPlaceholder
 
   useEffect(() => {
     if (!open) return
@@ -17,11 +19,11 @@ export function Screenshot({ src, alt, ratio = 'wide' }: Props) {
       if (e.key === 'Escape') setOpen(false)
     }
     document.addEventListener('keydown', onKey)
-    const prevOverflow = document.body.style.overflow
+    const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => {
       document.removeEventListener('keydown', onKey)
-      document.body.style.overflow = prevOverflow
+      document.body.style.overflow = prev
     }
   }, [open])
 
@@ -29,7 +31,7 @@ export function Screenshot({ src, alt, ratio = 'wide' }: Props) {
     <>
       <div
         className={`screenshot screenshot--${ratio}${
-          showPlaceholder ? '' : ' screenshot--clickable'
+          canOpen ? ' screenshot--clickable' : ''
         }`}
       >
         {showPlaceholder ? (
@@ -73,30 +75,32 @@ export function Screenshot({ src, alt, ratio = 'wide' }: Props) {
         )}
       </div>
 
-      {open && !showPlaceholder && (
-        <div
-          className="lightbox"
-          role="dialog"
-          aria-modal="true"
-          aria-label={alt}
-          onClick={() => setOpen(false)}
-        >
-          <button
-            type="button"
-            className="lightbox__close"
+      {open && canOpen && typeof document !== 'undefined' &&
+        createPortal(
+          <div
+            className="lightbox"
+            role="dialog"
+            aria-modal="true"
+            aria-label={alt}
             onClick={() => setOpen(false)}
-            aria-label="Close preview"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-              <path d="M6 6l12 12M18 6l-12 12" strokeLinecap="round" />
-            </svg>
-          </button>
-          <figure className="lightbox__figure" onClick={(e) => e.stopPropagation()}>
-            <img src={src} alt={alt} />
-            <figcaption className="lightbox__caption">{alt}</figcaption>
-          </figure>
-        </div>
-      )}
+            <button
+              type="button"
+              className="lightbox__close"
+              onClick={() => setOpen(false)}
+              aria-label="Close preview"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M6 6l12 12M18 6l-12 12" strokeLinecap="round" />
+              </svg>
+            </button>
+            <figure className="lightbox__figure" onClick={(e) => e.stopPropagation()}>
+              <img src={src} alt={alt} />
+              <figcaption className="lightbox__caption">{alt}</figcaption>
+            </figure>
+          </div>,
+          document.body,
+        )}
     </>
   )
 }
