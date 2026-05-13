@@ -317,7 +317,6 @@ function ProjectCategory({ id, eyebrow, title, description, items, accent, compa
     <Section id={id} eyebrow={eyebrow} title={title} description={description} accent={accent}>
       <div className="category-summary">
         <span>{items.length} {items.length === 1 ? 'project' : 'projects'}</span>
-        <span>{showScreenshots ? 'Screenshot slots enabled per card' : 'Project overview cards'}</span>
       </div>
 
       <div className={`project-grid ${compact ? 'project-grid--workflow' : 'project-grid--compact'}`}>
