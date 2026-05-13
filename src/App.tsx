@@ -4,7 +4,6 @@ import {
   careerTimeline,
   copilotProjectIds,
   featuredProjectIds,
-  galleryShots,
   powerAutomateProjectIds,
   powerBiProjectIds,
   projects,
@@ -27,7 +26,6 @@ const navLinks = [
   { href: '#copilot', label: 'Copilot' },
   { href: '#web', label: 'Web App' },
   { href: '#it-support', label: 'IT Support' },
-  { href: '#proofs', label: 'Proofs' },
   { href: '#contact', label: 'Contact' },
 ]
 
@@ -142,7 +140,7 @@ function App() {
         <ITSupport />
         <Career />
         <GeistVillage />
-        <Gallery />
+
         <Contact />
       </main>
 
@@ -535,27 +533,6 @@ function GeistVillage() {
           )
         })}
         <span className="village__hint">Hover or move your cursor</span>
-      </div>
-    </Section>
-  )
-}
-
-function Gallery() {
-  return (
-    <Section
-      id="proofs"
-      eyebrow="Selected Proofs"
-      title="Highlight gallery"
-      description="A curated strip of the strongest visuals across dashboards, automations, and internal tools."
-      accent="blue"
-    >
-      <div className="gallery gallery--selected">
-        {galleryShots.map((s) => (
-          <figure key={s.src} className="gallery__item">
-            <Screenshot src={s.src} alt={s.label} ratio="wide" />
-            <figcaption>{s.label}</figcaption>
-          </figure>
-        ))}
       </div>
     </Section>
   )
