@@ -210,6 +210,19 @@ function Hero() {
 
           <div className="hero__cta">
             <a href="#projects" className="btn btn--primary">View Projects</a>
+            <a
+              href="/resume/Nathaniel%20Philip%20Cruz.pdf"
+              className="btn btn--ghost btn--icon"
+              target="_blank"
+              rel="noreferrer"
+              download
+              aria-label="Download Nathaniel Philip Cruz CV (PDF)"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M12 4v12m0 0l-5-5m5 5l5-5M5 20h14" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Download CV
+            </a>
             <a href="#contact" className="btn btn--ghost">Get in touch</a>
           </div>
         </div>
@@ -222,7 +235,7 @@ function Hero() {
           <li><strong>17</strong><span>Total portfolio projects</span></li>
           <li><strong>10</strong><span>Power Automate workflows</span></li>
           <li><strong>3</strong><span>Power BI dashboards</span></li>
-          <li><strong>2</strong><span>VBA / macro systems</span></li>
+          <li><strong>2</strong><span>VBA / Macro Systems</span></li>
         </ul>
       </div>
     </section>
@@ -557,13 +570,21 @@ function Contact() {
             <span className="contact__label">Phone</span>
             <span className="contact__value">0907 306 8873</span>
           </a>
-          <div className="contact__card contact__card--pending" aria-disabled="true">
-            <span className="contact__label">LinkedIn</span>
-            <span className="contact__value">Coming Soon <span className="badge">Pending</span></span>
-          </div>
         </div>
         <div className="contact__actions">
-          <button type="button" className="btn btn--primary btn--disabled" disabled>Resume Coming Soon</button>
+          <a
+            className="btn btn--primary btn--icon"
+            href="/resume/Nathaniel%20Philip%20Cruz.pdf"
+            target="_blank"
+            rel="noreferrer"
+            download
+            aria-label="Download Nathaniel Philip Cruz CV (PDF)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path d="M12 4v12m0 0l-5-5m5 5l5-5M5 20h14" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Download CV
+          </a>
           <a className="btn btn--ghost" href="mailto:Cruznathaniel633@gmail.com">Send a message</a>
         </div>
       </div>
