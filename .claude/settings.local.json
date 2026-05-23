@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "WebFetch(domain:red1-for-hek.vercel.app)",
+      "Bash(npx tsc *)"
     ]
   }
 }

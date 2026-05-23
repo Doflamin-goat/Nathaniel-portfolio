@@ -32,6 +32,176 @@ const navLinks = [
 const byIds = (ids: string[]) =>
   ids.map((id) => projects.find((p) => p.id === id)).filter((p): p is Project => Boolean(p))
 
+function prefersReducedMotion() {
+  if (typeof window === 'undefined') return false
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+function useScrollParallax<T extends HTMLElement>() {
+  const ref = useRef<T>(null)
+  useEffect(() => {
+    if (prefersReducedMotion()) return
+    const el = ref.current
+    if (!el) return
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const rect = el.getBoundingClientRect()
+      const vh = window.innerHeight || 1
+      const progress = (rect.top + rect.height / 2) / vh - 0.5
+      el.style.setProperty('--parallax', progress.toFixed(4))
+    }
+    const onScroll = () => {
+      if (raf) return
+      raf = window.requestAnimationFrame(update)
+    }
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) window.cancelAnimationFrame(raf)
+    }
+  }, [])
+  return ref
+}
+
+function useMouseParallax<T extends HTMLElement>() {
+  const ref = useRef<T>(null)
+  useEffect(() => {
+    if (prefersReducedMotion()) return
+    const el = ref.current
+    if (!el) return
+    let raf = 0
+    let pendingX = 0
+    let pendingY = 0
+    const apply = () => {
+      raf = 0
+      el.style.setProperty('--mx', pendingX.toFixed(3))
+      el.style.setProperty('--my', pendingY.toFixed(3))
+    }
+    const onMove = (e: MouseEvent) => {
+      const rect = el.getBoundingClientRect()
+      pendingX = ((e.clientX - rect.left) / rect.width - 0.5) * 2
+      pendingY = ((e.clientY - rect.top) / rect.height - 0.5) * 2
+      if (!raf) raf = window.requestAnimationFrame(apply)
+    }
+    const onLeave = () => {
+      pendingX = 0
+      pendingY = 0
+      if (!raf) raf = window.requestAnimationFrame(apply)
+    }
+    el.addEventListener('mousemove', onMove)
+    el.addEventListener('mouseleave', onLeave)
+    return () => {
+      el.removeEventListener('mousemove', onMove)
+      el.removeEventListener('mouseleave', onLeave)
+      if (raf) window.cancelAnimationFrame(raf)
+    }
+  }, [])
+  return ref
+}
+
+function useTilt<T extends HTMLElement>(maxDeg = 6) {
+  const ref = useRef<T>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    if (prefersReducedMotion()) return
+    if (window.matchMedia('(hover: none)').matches) return
+    let raf = 0
+    const onMove = (e: MouseEvent) => {
+      if (raf) return
+      raf = window.requestAnimationFrame(() => {
+        raf = 0
+        const rect = el.getBoundingClientRect()
+        const px = (e.clientX - rect.left) / rect.width
+        const py = (e.clientY - rect.top) / rect.height
+        const rx = (0.5 - py) * maxDeg * 2
+        const ry = (px - 0.5) * maxDeg * 2
+        el.style.setProperty('--rx', `${rx.toFixed(2)}deg`)
+        el.style.setProperty('--ry', `${ry.toFixed(2)}deg`)
+        el.style.setProperty('--mx', `${(px * 100).toFixed(1)}%`)
+        el.style.setProperty('--my', `${(py * 100).toFixed(1)}%`)
+        el.style.setProperty('--tilt-active', '1')
+      })
+    }
+    const onLeave = () => {
+      el.style.setProperty('--rx', '0deg')
+      el.style.setProperty('--ry', '0deg')
+      el.style.setProperty('--tilt-active', '0')
+    }
+    el.addEventListener('mousemove', onMove)
+    el.addEventListener('mouseleave', onLeave)
+    return () => {
+      el.removeEventListener('mousemove', onMove)
+      el.removeEventListener('mouseleave', onLeave)
+      if (raf) window.cancelAnimationFrame(raf)
+    }
+  }, [maxDeg])
+  return ref
+}
+
+function HeroShapes() {
+  return (
+    <div className="hero__shapes" aria-hidden="true">
+      <div className="shape shape--cube">
+        <div className="shape__cube">
+          <span className="cube__face cube__face--front" />
+          <span className="cube__face cube__face--back" />
+          <span className="cube__face cube__face--right" />
+          <span className="cube__face cube__face--left" />
+          <span className="cube__face cube__face--top" />
+          <span className="cube__face cube__face--bottom" />
+        </div>
+      </div>
+      <div className="shape shape--orb" />
+      <div className="shape shape--ring" />
+      <div className="shape shape--plane" />
+      <svg className="shape shape--lines" viewBox="0 0 400 300" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="neonA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.7" />
+            <stop offset="100%" stopColor="#a78bfa" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="neonB" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d="M0 240 Q 120 160 220 200 T 400 90" stroke="url(#neonA)" strokeWidth="1.2" fill="none" />
+        <path d="M0 80 Q 110 30 200 110 T 400 220" stroke="url(#neonB)" strokeWidth="1" fill="none" />
+      </svg>
+    </div>
+  )
+}
+
+function useScrollReveal() {
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const targets = document.querySelectorAll<HTMLElement>('.reveal')
+    if (reduced) {
+      targets.forEach((el) => el.classList.add('is-visible'))
+      return
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            io.unobserve(entry.target)
+          }
+        }
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' },
+    )
+    targets.forEach((el) => io.observe(el))
+    return () => io.disconnect()
+  }, [])
+}
+
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -42,6 +212,8 @@ function App() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  useScrollReveal()
 
   const closeMenu = () => setMenuOpen(false)
 
@@ -179,22 +351,25 @@ function App() {
 }
 
 function Hero() {
+  const scrollRef = useScrollParallax<HTMLElement>()
+  const mouseRef = useMouseParallax<HTMLDivElement>()
   return (
-    <section id="top" className="hero">
-      <div className="hero__bg" aria-hidden="true">
+    <section id="top" className="hero" ref={scrollRef}>
+      <div className="hero__bg" aria-hidden="true" ref={mouseRef}>
         <div className="hero__grid" />
         <div className="hero__orb hero__orb--cyan" />
         <div className="hero__orb hero__orb--blue" />
         <div className="hero__orb hero__orb--green" />
+        <HeroShapes />
         <span className="ping ping--1" />
         <span className="ping ping--2" />
         <span className="ping ping--3" />
         <span className="ping ping--4" />
       </div>
 
-      <div className="container hero__inner">
+      <div className="container hero__inner reveal">
         <div className="hero__main">
-          <span className="eyebrow"><span className="eyebrow__dot" /> IT Specialist Portfolio</span>
+          <span className="eyebrow"><span className="eyebrow__dot" /> Available for new projects · IT Specialist Portfolio</span>
 
           <h1 className="hero__title">
             Building <span className="grad">automation workflows</span>,{' '}
@@ -382,25 +557,32 @@ function ProjectCard({
   showScreenshot?: boolean
   index?: number
 }) {
+  const tiltRef = useTilt<HTMLElement>(5)
   return (
-    <article className={`project-card${featured ? ' project-card--featured' : ''}${compact ? ' project-card--compact-only' : ''}`}>
-      {showScreenshot && <Screenshot src={project.screenshot} alt={project.title} />}
+    <article
+      ref={tiltRef}
+      className={`project-card tilt${featured ? ' project-card--featured' : ''}${compact ? ' project-card--compact-only' : ''}`}
+    >
+      <span className="tilt__spotlight" aria-hidden="true" />
+      <div className="tilt__inner">
+        {showScreenshot && <Screenshot src={project.screenshot} alt={project.title} />}
 
-      <div className="project-card__body">
-        <div className="project-card__topline">
-          {index && <span className="project-card__number">{String(index).padStart(2, '0')}</span>}
-          <span className="project-card__category">{project.category}</span>
-        </div>
-        <h3>{project.title}</h3>
-        <p className="project-card__desc">{project.description}</p>
+        <div className="project-card__body">
+          <div className="project-card__topline">
+            {index && <span className="project-card__number">{String(index).padStart(2, '0')}</span>}
+            <span className="project-card__category">{project.category}</span>
+          </div>
+          <h3>{project.title}</h3>
+          <p className="project-card__desc">{project.description}</p>
 
-        <div className="project-card__tools">
-          {project.tools.map((t) => <span key={t} className="tag">{t}</span>)}
-        </div>
+          <div className="project-card__tools">
+            {project.tools.map((t) => <span key={t} className="tag">{t}</span>)}
+          </div>
 
-        <div className="project-card__impact">
-          <span className="project-card__impact-label">Impact</span>
-          <span>{project.impact}</span>
+          <div className="project-card__impact">
+            <span className="project-card__impact-label">Impact</span>
+            <span>{project.impact}</span>
+          </div>
         </div>
       </div>
     </article>
@@ -604,7 +786,7 @@ type SectionProps = {
 function Section({ id, eyebrow, title, description, accent, children }: SectionProps) {
   return (
     <section id={id} className={`section${accent ? ` section--${accent}` : ''}`}>
-      <div className="container">
+      <div className="container reveal">
         <header className="section__header">
           <span className="eyebrow"><span className="eyebrow__dot" /> {eyebrow}</span>
           <h2 className="section__title">{title}</h2>

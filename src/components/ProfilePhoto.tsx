@@ -37,10 +37,15 @@ export function ProfilePhoto({
         )}
       </div>
       <div className="profile-card__meta">
-        <span className="profile-card__label">Online</span>
+        <span className="profile-card__label">Available</span>
         <span className="profile-card__name">Nathaniel Philip T. Cruz</span>
         <span className="profile-card__role">IT Specialist · Automation Dev</span>
       </div>
+
+      <span className="profile-chip profile-chip--1" aria-hidden="true">Power Automate</span>
+      <span className="profile-chip profile-chip--2" aria-hidden="true">Power BI</span>
+      <span className="profile-chip profile-chip--3" aria-hidden="true">Excel VBA</span>
+      <span className="profile-chip profile-chip--4" aria-hidden="true">React + Vite</span>
     </div>
   )
 }
