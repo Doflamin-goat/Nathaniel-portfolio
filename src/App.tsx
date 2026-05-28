@@ -374,17 +374,19 @@ function Hero() {
 ```jsx
 <h1 className="hero__title">
   IT Support Specialist focused on{' '}
-  <span className="grad">automation workflows</span>,{' '}
-  <span className="grad grad--blue">dashboards</span>,{' '}
-  <span className="grad grad--green">Excel systems</span>, and internal web tools.
+  <span className="grad">hardware and software troubleshooting</span>,{' '}
+  <span className="grad grad--blue">network and printer support</span>, and{' '}
+  <span className="grad grad--green">automation tools</span> for daily IT operations.
 </h1>
 
 <p className="hero__subtitle">
-  I provide technical support while designing internal tools that reduce manual work,
-  automate repetitive processes, organize company data, and improve reporting for
-  business operations using Microsoft 365, Excel VBA, Power BI, and modern web technologies.
+  I provide hands-on technical support for computers, software issues, network
+  connectivity, printers, CCTV systems, user support, and daily IT operations,
+  while also building automation workflows, dashboards, Excel systems, and
+  internal web tools that reduce manual work and improve business processes.
 </p>
 ```
+
 
           <div className="hero__cta">
             <a href="#projects" className="btn btn--primary">View Projects</a>
@@ -420,27 +422,7 @@ function Hero() {
   )
 }
 
-function About() {
-  return (
-    <Section id="about" eyebrow="About Me" title="Hi, I’m Nathaniel — I build practical systems for daily operations">
-      <div className="about">
-        <div className="about__lead">
-          <p>
-            Hi, I’m <strong>Nathaniel Philip T. Cruz</strong>, an <strong>IT Specialist</strong> who enjoys
-            building practical tools and systems that make daily work easier, faster, and more organized.
-          </p>
-          <p>
-            I focus on creating internal systems, workflow automations, dashboards, Excel VBA tools,
-            scripting solutions, and web applications that support business operations. My work includes
-            Power Automate workflows, Microsoft Teams and SharePoint automations, Power BI dashboards,
-            Excel VBA tools, and internal web applications.
-          </p>
-          <p>
-            Aside from automation and system development, I also handle IT support tasks such as computer
-            setup, printer and network troubleshooting, CCTV setup, hardware support, remote support,
-            and basic server or VPN-related tasks.
-          </p>
-          <p><em>I enjoy improving manual processes and turning repetitive tasks into organized, automated, and easier-to-manage systems.</em></p>
+function About() { return ( <Section id="about" eyebrow="About Me" title="Hi, I’m Nathaniel — an IT Support Specialist who builds practical systems for daily operations" > <div className="about"> <div className="about__lead"> <p> Hi, I’m <strong>Nathaniel Philip T. Cruz</strong>, an{' '} <strong>IT Support Specialist</strong> with hands-on experience in hardware and software troubleshooting, computer setup, printer support, network connectivity, CCTV setup, remote support, and daily IT operations. </p> <p> My main focus is helping users resolve technical issues, maintain reliable IT equipment, support office systems, and make sure daily operations run smoothly. I handle support tasks such as PC setup, Windows configuration, printer and peripheral troubleshooting, LAN/Wi-Fi issues, shared folder access, CCTV support, and basic server or VPN-related tasks. </p> <p> Alongside IT support, I also build practical automation tools and internal systems that help reduce manual work and improve business processes. My work includes Power Automate workflows, Microsoft Teams and SharePoint automations, Power BI dashboards, Excel VBA tools, scripting solutions, and internal web applications. </p> <p> <em> I enjoy solving technical problems while also improving repetitive workflows through organized, automated, and easier-to-manage systems. </em></p>
         </div>
 
         <aside className="about__card">
