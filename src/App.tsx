@@ -371,17 +371,20 @@ function Hero() {
         <div className="hero__main">
           <span className="eyebrow"><span className="eyebrow__dot" /> Available for new projects · IT Specialist Portfolio</span>
 
-          <h1 className="hero__title">
-            Building <span className="grad">automation workflows</span>,{' '}
-            <span className="grad grad--blue">dashboards</span>,{' '}
-            <span className="grad grad--green">Excel systems</span>, and internal web tools.
-          </h1>
+```jsx
+<h1 className="hero__title">
+  IT Support Specialist focused on{' '}
+  <span className="grad">automation workflows</span>,{' '}
+  <span className="grad grad--blue">dashboards</span>,{' '}
+  <span className="grad grad--green">Excel systems</span>, and internal web tools.
+</h1>
 
-          <p className="hero__subtitle">
-            I design and build internal tools that reduce manual work, organize
-            company data, automate repetitive processes, and improve reporting
-            for business operations.
-          </p>
+<p className="hero__subtitle">
+  I provide technical support while designing internal tools that reduce manual work,
+  automate repetitive processes, organize company data, and improve reporting for
+  business operations using Microsoft 365, Excel VBA, Power BI, and modern web technologies.
+</p>
+```
 
           <div className="hero__cta">
             <a href="#projects" className="btn btn--primary">View Projects</a>
