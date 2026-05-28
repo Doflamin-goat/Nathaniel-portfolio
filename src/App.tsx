@@ -386,7 +386,7 @@ function Hero() {
           <div className="hero__cta">
             <a href="#projects" className="btn btn--primary">View Projects</a>
             <a
-              href="/resume/Nathaniel%20Philip%20Cruz.pdf"
+              href="/resume/NPC%20-%20IT%20Support%20Specialist.pdf"
               className="btn btn--ghost btn--icon"
               target="_blank"
               rel="noreferrer"
@@ -756,7 +756,7 @@ function Contact() {
         <div className="contact__actions">
           <a
             className="btn btn--primary btn--icon"
-            href="/resume/Nathaniel%20Philip%20Cruz.pdf"
+            href="/resume/NPC%20-%20IT%20Support%20Specialist.pdf"
             target="_blank"
             rel="noreferrer"
             download
