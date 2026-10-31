@@ -1,3 +1,5 @@
+import { media2026, type ProjectMedia } from './media2026'
+
 export type Accent = 'cyan' | 'blue' | 'green' | 'teal'
 
 export type SkillGroup = {
@@ -12,6 +14,9 @@ export type ProjectGroup =
   | 'powerBi'
   | 'vba'
   | 'copilot'
+  | 'desktop'
+  | 'infrastructure'
+  | 'database'
 
 export type Project = {
   id: string
@@ -22,6 +27,14 @@ export type Project = {
   tools: string[]
   impact: string
   screenshot?: string
+  year?: number
+  media?: ProjectMedia[]
+  problem?: string
+  solution?: string
+  functions?: string[]
+  status?: string
+  backend?: string
+  experienceArea?: boolean
 }
 
 export type TimelineStep = {
@@ -31,6 +44,24 @@ export type TimelineStep = {
 }
 
 export const skillGroups: SkillGroup[] = [
+  { title: 'Software & Desktop Development', accent: 'blue', items: ['Python', 'PySide6 / Qt', 'Windows desktop applications', 'PyInstaller packaging', 'JSON configuration', 'Excel file processing', 'OneDrive folder integration'] },
+  {
+    title: 'IT Support & Infrastructure',
+    accent: 'cyan',
+    items: [
+      'Windows installation, setup & troubleshooting',
+      'Software & driver installation',
+      'Hardware diagnostics & PC maintenance',
+      'LAN / Wi-Fi & IP connectivity diagnostics',
+      'Shared printer & file access support',
+      'Microsoft 365 & business application support',
+      'VPN & remote support',
+      'Server connectivity & shared storage',
+      'CCTV setup and support',
+    ],
+  },
+  { title: 'Servers & Networking', accent: 'cyan', items: ['Unraid', 'Docker', 'Tailscale', 'AdGuard Home', 'LAN / Wi-Fi networking', 'DNS configuration', 'Router configuration', 'Android WebView integration'] },
+  { title: 'Database Development & Integration', accent: 'green', items: ['PostgreSQL', 'Supabase', 'SQL', 'ODBC', 'ADODB', 'Excel VBA synchronization', 'Incremental and bidirectional synchronization'] },
   {
     title: 'Automation & Workflow',
     accent: 'cyan',
@@ -85,39 +116,69 @@ export const skillGroups: SkillGroup[] = [
       'PostgreSQL basics',
     ],
   },
-  {
-    title: 'IT Support & Infrastructure',
-    accent: 'cyan',
-    items: [
-      'Computer setup',
-      'Network printer setup',
-      'CCTV setup',
-      'Computer reformatting',
-      'Hardware troubleshooting',
-      'Printer troubleshooting',
-      'CPU cleaning',
-      'PC building',
-      'CMD basics',
-      'PowerShell basics',
-      'Tailscale VPN',
-      'Unraid server basics',
-      'Veyon / AnyDesk remote support',
-    ],
-  },
 ]
 
 export const projects: Project[] = [
   {
+    id: 'requisition-desktop', title: 'Requisition Generator', group: 'desktop', year: 2026,
+    category: 'Desktop Application / Engineering Automation',
+    description: 'A Windows desktop application that processes electrical panelboard and switchgear quotation data into structured requisition workbooks.',
+    tools: ['Python', 'PySide6 / Qt', 'Excel Processing', 'PyInstaller', 'JSON Configuration', 'Shared Network Storage'],
+    impact: 'Supports material preparation and review through structured requisition and accessory summaries.',
+    media: [media2026.requisition],
+    problem: 'Manual quotation-to-requisition preparation required repeated spreadsheet work and review.',
+    solution: 'A desktop application imports quotation data, calculates material requirements and generates structured workbooks. This is distinct from the existing Excel VBA requisition system.',
+    functions: ['Excel quotation importing', 'Drag-and-drop processing', 'Circuit breaker identification', 'Breaker quantity calculations', 'Accessory extraction and processing', 'Requisition Summary generation', 'Accessories Summary generation', 'Unrecognized item review', 'QC/QA correction workflows', 'Configurable item master', 'Standalone Windows executable packaging', 'Shared network configuration'],
+  },
+  {
+    id: 'approved-files-finder', title: 'Approved Files Finder', group: 'desktop', year: 2026,
+    category: 'Desktop Utility / Document Management',
+    description: 'A Windows utility for locating approved engineering documents by project reference number through local OneDrive folders.',
+    tools: ['Python', 'PySide6', 'Windows', 'PyInstaller', 'OneDrive File Integration'],
+    impact: 'Provides a read-only lookup workflow for matching files and folders.',
+    media: [media2026.finder],
+    problem: 'Finding approved documents across project folders creates repeated navigation and searching.',
+    solution: 'Project reference search connects users to matching local OneDrive files, folders and recent project history.',
+    functions: ['Project reference searching', 'Approved document lookup', 'Local OneDrive folder integration', 'Open matching files and folders', 'Recent project history', 'Configurable file locations', 'Read-only document access', 'Standalone Windows application'],
+    status: 'Windows operational · macOS expansion planned / ongoing. Direct SharePoint Online integration remains unresolved; its interface option does not indicate working integration.',
+  },
+  {
+    id: 'engineering-dashboard', title: 'Engineering Performance Analytics', group: 'powerBi', year: 2026,
+    category: 'Business Intelligence / Engineering Analytics',
+    description: 'A Power BI report bringing engineering workload, estimation and design completion into a coordinated reporting view.',
+    tools: ['Power BI', 'Interactive Filtering', 'Workload Reporting', 'Data Visualization'],
+    impact: 'Supports review of workload distribution, work volume and completion status.',
+    media: [media2026.engineering],
+    problem: 'Engineering assignments and completion activity need a consolidated view.',
+    solution: 'Filtered summaries visualize engineering load, item categories and deadline performance. Underlying calculation and integration details are not asserted.',
+    functions: ['Engineering workload analysis', 'Assigned engineer tracking', 'Estimation and design completion monitoring', 'Workload distribution', 'Work volume analysis', 'Engineering item categorization', 'Deadline and performance monitoring'],
+  },
+  {
+    id: 'it-infrastructure-experience', title: 'IT Infrastructure & Technical Support', group: 'infrastructure', year: 2026, experienceArea: true,
+    category: 'IT Support / Systems Administration',
+    description: 'Hands-on configuration, support and troubleshooting for office computers, network resources, server connectivity and shared services.',
+    tools: ['Windows', 'Networking', 'DNS', 'VPN', 'Server Administration', 'Printer Sharing', 'System Diagnostics'],
+    impact: 'An infrastructure experience area covering user support and shared service connectivity.',
+    problem: 'Office users depend on reliable computers, shared resources and remote access.',
+    solution: 'Troubleshooting and configuration across Windows, printers, routers, DNS, remote access and shared storage.',
+    functions: ['Windows computer troubleshooting', 'Shared printer configuration', 'Local networking and DNS troubleshooting', 'Router configuration', 'Server connectivity', 'Remote access solutions', 'Windows OS diagnostics', 'Shared storage and resource access'],
+  },
+  {
     id: 'hr-attendance',
-    title: 'HR Attendance System',
+    title: 'HR Attendance Management System',
     group: 'web',
-    category: 'Web Application',
+    category: 'Full-Stack Web Development / Human Resource Systems',
     description:
-      'A web-based HR attendance system for organizing attendance records, late records, absences, exemptions, undertime tracking, and HR monitoring in one internal system.',
-    tools: ['React', 'Vite', 'TypeScript', 'Supabase', 'Vercel'],
+      'Developed a web application to streamline attendance monitoring, employee management and administrative workflows across organizational workspaces.',
+    tools: ['React', 'TypeScript', 'Vite', 'Supabase', 'PostgreSQL'],
     impact:
-      'Centralized attendance records and reduced manual checking of employee attendance files.',
-    screenshot: '/screenshots/hr-attendance-dashboard.png',
+      'Brings attendance records, administrative tasks and Excel reporting into a shared application workflow.',
+    year: 2026,
+    media: [media2026.hr, media2026.schema],
+    problem: 'Attendance imports, exceptions and administrative follow-ups need a consistent place to be managed.',
+    solution: 'A React and TypeScript interface backed by Supabase and PostgreSQL, with attendance processing and administrative reporting.',
+    functions: ['Employee management', 'Biometric attendance imports', 'Late and absence tracking', 'Undertime calculations', 'Half-day processing', 'Leave and exemption management', 'Administrative memo tracking', 'Dashboard metrics', 'Excel attendance exports', 'Multiple organizational workspaces', 'Role-based access', 'PostgreSQL data management'],
+    backend: 'Supabase provides backend services over relational PostgreSQL tables for attendance and administrative records. The documented application includes workspace and role-based access. The schema image alone does not verify access-policy enforcement, security controls or production readiness.',
   },
 
   {
@@ -243,27 +304,35 @@ export const projects: Project[] = [
 
   {
     id: 'rfq-dashboard',
-    title: 'RFQ / Quotation Dashboard',
+    title: 'RFQ & Quotation Analytics',
     group: 'powerBi',
-    category: 'Power BI Dashboard',
+    category: 'Business Intelligence / Sales Reporting',
     description:
-      'A Power BI dashboard for monitoring RFQs, quotations, estimates, drawing-related tracking, statuses, actions, sources, overdue items, and due-this-week items.',
+      'A Power BI report for RFQ monitoring, quotation tracking and sales summaries, with interactive deadline, status and action filters.',
     tools: ['Power BI', 'SharePoint List', 'Microsoft Lists'],
     impact:
-      'Improved quotation and engineering tracking through visual analytics and clearer status monitoring.',
-    screenshot: '/screenshots/rfq-dashboard.png',
+      'Organizes quotation activity and deadline visibility without presenting company metrics as personal achievements.',
+    year: 2026,
+    media: [media2026.rfq],
+    problem: 'Quotation activity and deadlines need a consolidated reporting view.',
+    solution: 'Interactive Power BI summaries and filters connect RFQ status, quotation values and salesperson activity.',
+    functions: ['RFQ monitoring', 'Quotation tracking', 'Sales performance summaries', 'Quotation values and totals', 'Deadline monitoring', 'Salesperson performance', 'Status and action tracking', 'Interactive report filtering'],
   },
   {
     id: 'jo-tracker',
-    title: 'JO Tracker Dashboard',
+    title: 'Job Order Monitoring',
     group: 'powerBi',
-    category: 'Power BI Dashboard',
+    category: 'Business Intelligence / Operations Monitoring',
     description:
       'A Power BI dashboard based on JO Summary data for tracking job orders, active items, delivered items, overdue items, due dates, status, and progress.',
     tools: ['Power BI', 'SharePoint List', 'Microsoft Lists'],
     impact:
       'Made Job Order monitoring more visual, organized, and easier to analyze.',
-    screenshot: '/screenshots/jo-tracker-powerbi.png',
+    year: 2026,
+    media: [media2026.orders],
+    problem: 'Job order progress, delivery and deadlines need to be reviewed together.',
+    solution: 'A Power BI report combines status distribution, delivery tracking and filtered job order summaries.',
+    functions: ['Job order status monitoring', 'Delivery tracking', 'Due date monitoring', 'Project progress visibility', 'Salesman and source filtering', 'Status distribution', 'On-time and delayed work tracking', 'Job order summary reporting'],
   },
   {
     id: 'field-service-dashboard',
@@ -319,11 +388,8 @@ export const projects: Project[] = [
 
 export const featuredProjectIds = [
   'hr-attendance',
-  'jo-tracker',
-  'rfq-dashboard',
-  'requisition-automation',
-  'sticker-generator',
-  'rfq-bot',
+  'requisition-desktop',
+  'approved-files-finder',
 ]
 
 export const powerAutomateProjectIds = [
@@ -339,7 +405,7 @@ export const powerAutomateProjectIds = [
   'pa-channel-to-excel',
 ]
 
-export const powerBiProjectIds = ['rfq-dashboard', 'jo-tracker', 'field-service-dashboard']
+export const powerBiProjectIds = ['rfq-dashboard', 'engineering-dashboard', 'jo-tracker', 'field-service-dashboard']
 export const vbaProjectIds = ['requisition-automation', 'sticker-generator']
 export const copilotProjectIds = ['rfq-bot']
 export const webProjectIds = ['hr-attendance']

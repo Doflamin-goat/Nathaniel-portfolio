@@ -13,19 +13,19 @@ import {
   type Accent,
   type Project,
 } from './data'
-import { Screenshot } from './components/Screenshot'
+import { ProjectDetails, ProjectVisual } from './components/ProjectDetails'
 import { ProfilePhoto } from './components/ProfilePhoto'
 
 const navLinks = [
   { href: '#about', label: 'About' },
   { href: '#skills', label: 'Skills' },
+  { href: '#it-support', label: 'IT Support' },
   { href: '#projects', label: 'Featured' },
   { href: '#power-automate', label: 'Power Automate' },
   { href: '#power-bi', label: 'Power BI' },
   { href: '#excel', label: 'VBA/Macros' },
   { href: '#copilot', label: 'Copilot' },
   { href: '#web', label: 'Web App' },
-  { href: '#it-support', label: 'IT Support' },
   { href: '#contact', label: 'Contact' },
 ]
 
@@ -92,11 +92,12 @@ function useMouseParallax<T extends HTMLElement>() {
       pendingY = 0
       if (!raf) raf = window.requestAnimationFrame(apply)
     }
-    el.addEventListener('mousemove', onMove)
-    el.addEventListener('mouseleave', onLeave)
+    const eventTarget = el.parentElement ?? el
+    eventTarget.addEventListener('mousemove', onMove)
+    eventTarget.addEventListener('mouseleave', onLeave)
     return () => {
-      el.removeEventListener('mousemove', onMove)
-      el.removeEventListener('mouseleave', onLeave)
+      eventTarget.removeEventListener('mousemove', onMove)
+      eventTarget.removeEventListener('mouseleave', onLeave)
       if (raf) window.cancelAnimationFrame(raf)
     }
   }, [])
@@ -205,6 +206,16 @@ function useScrollReveal() {
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const menuButton = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { setMenuOpen(false); menuButton.current?.focus() }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [menuOpen])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12)
@@ -232,8 +243,10 @@ function App() {
           </a>
 
           <button
+            ref={menuButton}
             className="navbar__toggle"
             aria-expanded={menuOpen}
+            aria-controls="primary-navigation"
             aria-label="Toggle navigation"
             onClick={() => setMenuOpen((v) => !v)}
           >
@@ -242,7 +255,7 @@ function App() {
             <span />
           </button>
 
-          <nav className={`navbar__links${menuOpen ? ' navbar__links--open' : ''}`}>
+          <nav id="primary-navigation" aria-label="Primary" className={`navbar__links${menuOpen ? ' navbar__links--open' : ''}`}>
             {navLinks.map((l) => (
               <a key={l.href} href={l.href} onClick={closeMenu}>
                 {l.label}
@@ -257,13 +270,14 @@ function App() {
         <Hero />
         <About />
         <Skills />
+        <ITSupport />
         <FeaturedProjects />
 
         <ProjectCategory
           id="power-automate"
           eyebrow="Microsoft 365 Automation"
           title="Power Automate Projects"
-          description="Ten practical workflows that connect Microsoft Teams, SharePoint Lists, Excel, due-date reminders, file sorting, and automated update messages. Each workflow card has a screenshot slot so proof images can be added later."
+          description="Practical workflows connecting Microsoft Teams, SharePoint Lists, Excel, due-date reminders, file sorting and automated update messages."
           items={byIds(powerAutomateProjectIds)}
           accent="cyan"
           showScreenshots
@@ -273,7 +287,7 @@ function App() {
           id="power-bi"
           eyebrow="Business Intelligence"
           title="Power BI Dashboards"
-          description="Dashboards that turn Microsoft Lists and SharePoint data into cleaner status tracking for RFQs, Job Orders, and Field Service records."
+          description="A coordinated 2026 collection for RFQ, engineering and job order reporting, alongside the existing Field Service dashboard. Functions describe the reports; company metrics are not presented as project achievements."
           items={byIds(powerBiProjectIds)}
           accent="blue"
           showScreenshots
@@ -303,13 +317,12 @@ function App() {
           id="web"
           eyebrow="Web Development"
           title="Web Application Project"
-          description="Internal web application development using React, Vite, TypeScript, Supabase, and Vercel."
+          description="Internal web application development using React, Vite, TypeScript, Supabase and PostgreSQL."
           items={byIds(webProjectIds)}
           accent="blue"
           showScreenshots
         />
 
-        <ITSupport />
         <Career />
         <GeistVillage />
 
@@ -371,21 +384,16 @@ function Hero() {
         <div className="hero__main">
           <span className="eyebrow"><span className="eyebrow__dot" /> Available for new projects · IT Specialist Portfolio</span>
 
-```jsx
-<h1 className="hero__title">
-  IT Support Specialist focused on{' '}
-  <span className="grad">hardware and software troubleshooting</span>,{' '}
-  <span className="grad grad--blue">network and printer support</span>, and{' '}
-  <span className="grad grad--green">automation tools</span> for daily IT operations.
-</h1>
+          <h1 className="hero__title">
+            <span className="grad">IT Specialist</span> <span className="hero__title-divider">|</span>{' '}
+            <span className="grad grad--blue">IT Support &amp; Software Development</span>
+          </h1>
 
-<p className="hero__subtitle">
-  I provide hands-on technical support for computers, software issues, network
-  connectivity, printers, CCTV systems, user support, and daily IT operations,
-  while also building automation workflows, dashboards, Excel systems, and
-  internal web tools that reduce manual work and improve business processes.
-</p>
-```
+          <p className="hero__subtitle">
+            IT Specialist with hands-on experience in Windows troubleshooting, networking,
+            hardware and software support, and business application support. I also develop
+            desktop applications, web-based systems, automation workflows, and reporting solutions.
+          </p>
 
 
           <div className="hero__cta">
@@ -411,38 +419,39 @@ function Hero() {
           <ProfilePhoto />
         </div>
 
-        <ul className="hero__stats" aria-label="Highlights">
-          <li><strong>17</strong><span>Total portfolio projects</span></li>
-          <li><strong>10</strong><span>Power Automate workflows</span></li>
-          <li><strong>3</strong><span>Power BI dashboards</span></li>
-          <li><strong>2</strong><span>VBA / Macro Systems</span></li>
-        </ul>
       </div>
     </section>
   )
 }
 
-function About() { return ( <Section id="about" eyebrow="About Me" title="Hi, I’m Nathaniel — an IT Support Specialist who builds practical systems for daily operations" > <div className="about"> <div className="about__lead"> <p> Hi, I’m <strong>Nathaniel Philip T. Cruz</strong>, an{' '} <strong>IT Support Specialist</strong> with hands-on experience in hardware and software troubleshooting, computer setup, printer support, network connectivity, CCTV setup, remote support, and daily IT operations. </p> <p> My main focus is helping users resolve technical issues, maintain reliable IT equipment, support office systems, and make sure daily operations run smoothly. I handle support tasks such as PC setup, Windows configuration, printer and peripheral troubleshooting, LAN/Wi-Fi issues, shared folder access, CCTV support, and basic server or VPN-related tasks. </p> <p> Alongside IT support, I also build practical automation tools and internal systems that help reduce manual work and improve business processes. My work includes Power Automate workflows, Microsoft Teams and SharePoint automations, Power BI dashboards, Excel VBA tools, scripting solutions, and internal web applications. </p> <p> <em> I enjoy solving technical problems while also improving repetitive workflows through organized, automated, and easier-to-manage systems. </em></p>
+function About() { return ( <Section id="about" eyebrow="About Me" title="IT support first, with software and automation experience"> <div className="about"> <div className="about__lead">
+          <p>I’m <strong>Nathaniel Philip T. Cruz</strong>, an IT Specialist focused on helping people keep their computers, applications, and shared systems working reliably.</p>
+          <p>My hands-on support work includes Windows setup and troubleshooting, software and driver installation, hardware diagnostics, PC performance issues, LAN/Wi-Fi connectivity, shared printers, CCTV, remote access, and server connectivity.</p>
+          <p>I also support Microsoft Teams, OneDrive and SharePoint file access, Microsoft 365 applications, and other business software used in daily operations.</p>
+          <p>Alongside IT support, I develop practical tools: an HR attendance web application, Python desktop utilities, Power Automate workflows, Power BI reports, Excel VBA systems, and database integrations.</p>
+          <p><em>I enjoy resolving support issues and improving the tools people depend on each day.</em></p>
         </div>
 
         <aside className="about__card">
           <h3>What I focus on</h3>
           <ul>
+            <li>Windows, hardware, software, and business application support</li>
+            <li>Networking, shared services, and basic server administration</li>
+            <li>Web and Windows desktop application development</li>
             <li>Business process automation using Microsoft 365 tools</li>
             <li>Dashboard reporting with Power BI and Microsoft Lists</li>
             <li>Excel VBA systems for document and workflow preparation</li>
             <li>Internal web applications using React and Supabase</li>
-            <li>Hands-on IT support for users, devices, and systems</li>
           </ul>
         </aside>
       </div>
 
       <div className="about__highlights">
         {[
+          { title: 'IT Support', desc: 'Windows, devices, printers, networking, Microsoft 365, and remote support for daily operations.', accent: 'teal' },
           { title: 'Workflow Automation', desc: 'Power Automate, Teams, and SharePoint workflows that reduce manual follow-ups.', accent: 'cyan' },
           { title: 'Dashboard Reporting', desc: 'Power BI dashboards that make operations easier to monitor and explain.', accent: 'blue' },
           { title: 'Excel VBA Systems', desc: 'Excel tools, formulas, macros, and scripts that speed up repetitive office processes.', accent: 'green' },
-          { title: 'IT Support', desc: 'Computer setup, printers, CCTV, hardware troubleshooting, remote support, and network basics.', accent: 'teal' },
         ].map((h) => (
           <article key={h.title} className={`highlight highlight--${h.accent}`}>
             <span className="highlight__dot" aria-hidden="true" />
@@ -461,7 +470,7 @@ function Skills() {
       id="skills"
       eyebrow="Core Skills"
       title="Tools and platforms I work with"
-      description="A practical stack focused on Microsoft 365 automation, dashboard reporting, Excel/VBA systems, scripting, web development, and IT support."
+      description="IT support and troubleshooting, networking, Microsoft 365, and server connectivity, alongside software development, database integration, and business automation."
     >
       <div className="skills">
         {skillGroups.map((g) => (
@@ -483,9 +492,9 @@ function FeaturedProjects() {
   return (
     <Section
       id="projects"
-      eyebrow="Featured Projects"
-      title="Selected work across automation, reporting, VBA, Copilot, and web"
-      description="These are the main projects to present first. Detailed category sections below separate Power Automate, Power BI, VBA/Macros, Copilot Studio, and Web Development work."
+      eyebrow="Featured Projects · 2026"
+      title="Practical software built around real operations"
+      description="Web and desktop applications that complement hands-on IT support. Explore each project's problem, implementation, and documented functionality."
     >
       <div className="project-grid project-grid--featured">
         {byIds(featuredProjectIds).map((p) => (
@@ -546,28 +555,32 @@ function ProjectCard({
   return (
     <article
       ref={tiltRef}
-      className={`project-card tilt${featured ? ' project-card--featured' : ''}${compact ? ' project-card--compact-only' : ''}`}
+      className={`project-card tilt${featured ? ' project-card--featured' : ''}${featured && project.id === 'hr-attendance' ? ' project-card--lead' : ''}${compact ? ' project-card--compact-only' : ''}`}
     >
       <span className="tilt__spotlight" aria-hidden="true" />
       <div className="tilt__inner">
-        {showScreenshot && <Screenshot src={project.screenshot} alt={project.title} />}
+        {showScreenshot && <ProjectVisual project={project} />}
 
         <div className="project-card__body">
           <div className="project-card__topline">
             {index && <span className="project-card__number">{String(index).padStart(2, '0')}</span>}
             <span className="project-card__category">{project.category}</span>
+            {project.year && <span className="project-year">{project.year}</span>}
           </div>
           <h3>{project.title}</h3>
           <p className="project-card__desc">{project.description}</p>
+          {project.functions && <ul className="project-functions">{project.functions.slice(0, 3).map(item => <li key={item}>{item}</li>)}</ul>}
+          {project.status && <p className="project-status">{project.status}</p>}
 
           <div className="project-card__tools">
             {project.tools.map((t) => <span key={t} className="tag">{t}</span>)}
           </div>
 
           <div className="project-card__impact">
-            <span className="project-card__impact-label">Impact</span>
+            <span className="project-card__impact-label">{project.year ? 'Purpose & outcome' : 'Impact'}</span>
             <span>{project.impact}</span>
           </div>
+          <ProjectDetails project={project} />
         </div>
       </div>
     </article>
@@ -577,12 +590,20 @@ function ProjectCard({
 function ITSupport() {
   const groups = [
     {
-      title: 'Hardware & Devices',
-      items: ['Computer setup & reformatting', 'PC building & CPU cleaning', 'Hardware troubleshooting', 'Printer & network printer setup', 'Printer troubleshooting', 'CCTV setup'],
+      title: 'Windows & Hardware',
+      items: ['Windows installation, setup, and troubleshooting', 'Software and driver installation', 'Hardware diagnostics and maintenance', 'Computer performance troubleshooting', 'PC setup and configuration', 'CCTV setup and support'],
     },
     {
-      title: 'Network & Infrastructure',
-      items: ['Tailscale VPN', 'Unraid server basics', 'CMD & PowerShell basics', 'Internal file server pathing', 'Remote support via Veyon', 'Remote support via AnyDesk'],
+      title: 'Networking & Remote Access',
+      items: ['LAN and Wi-Fi troubleshooting', 'IP addressing and connectivity diagnostics', 'Router and DNS configuration', 'Shared printer troubleshooting', 'VPN and remote access support', 'Remote support via Veyon and AnyDesk'],
+    },
+    {
+      title: 'Microsoft 365 & Business Applications',
+      items: ['Microsoft Teams troubleshooting', 'OneDrive and SharePoint file access', 'Microsoft 365 application support', 'Business application troubleshooting'],
+    },
+    {
+      title: 'Infrastructure & Shared Services',
+      items: ['Server connectivity and shared storage', 'Windows file sharing', 'Unraid and Docker familiarity', 'Tailscale VPN', 'Basic server administration'],
     },
   ]
 
@@ -590,8 +611,8 @@ function ITSupport() {
     <Section
       id="it-support"
       eyebrow="IT Support & Infrastructure"
-      title="Reliable hands-on IT support"
-      description="Day-to-day support for users, devices, peripherals, and small infrastructure while also building automation and reporting tools."
+      title="Hands-on support for users, devices, and shared systems"
+      description="Practical troubleshooting across Windows, hardware, networking, Microsoft 365, and office infrastructure."
       accent="cyan"
     >
       <div className="it-grid">
@@ -612,6 +633,9 @@ function ITSupport() {
             </ul>
           </div>
         ))}
+      </div>
+      <div className="infrastructure-experience">
+        {projects.filter(project => project.experienceArea).map(project => <ProjectCard key={project.id} project={project} showScreenshot />)}
       </div>
     </Section>
   )
@@ -664,6 +688,7 @@ function GeistVillage() {
   const [hovered, setHovered] = useState<string | null>('bot')
 
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (prefersReducedMotion()) return
     const rect = ref.current?.getBoundingClientRect()
     if (!rect) return
     setMouse({ x: ((e.clientX - rect.left) / rect.width) * 100, y: ((e.clientY - rect.top) / rect.height) * 100 })
